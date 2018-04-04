@@ -22,3 +22,6 @@ typedef struct {
 } NRF_GPIOTE_REG;
 
 #endif
+
+void gpiote_init (void);
+void ppi_init (void);

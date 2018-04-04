@@ -49,8 +49,9 @@ typedef struct {
 } NRF_UART_REG;
 
 void uart_init(void){
-  GPIO->PIN_CNF[24] = 1;
-  GPIO->PIN_CNF[25] = 0;
+  UART->STARTRX = 1;
+  GPIO->PIN_CNF[24] = 1; // set pin to output
+  GPIO->PIN_CNF[25] = 0; // set pin to input
 
   UART->PSELTXD = 24;
   UART->PSELRXD = 25;
@@ -58,23 +59,19 @@ void uart_init(void){
   UART->PSELCTS = 0xffffffff;
   UART->BAUDRATE = 0x00275000;
   UART->ENABLE = 4;
-  UART->STARTRX = 1;
 }
 
 void uart_send(char letter){
   UART->STARTTX = 1;
+  UART->TXDRDY = 0;
   UART->TXD = letter;
   while(!UART->TXDRDY);
-  UART->TXDRDY = 0;
   UART-> STOPTX = 1;
 }
 
 char uart_read(void){
-  UART->RXDRDY = 0;
-  UART->STARTRX = 1;
-  char rx = UART->RXD;
-  UART->STOPRX = 1;
   if (UART->RXDRDY) {
+      char rx = UART->RXD;
       return rx;
   } else {
       return '\0';

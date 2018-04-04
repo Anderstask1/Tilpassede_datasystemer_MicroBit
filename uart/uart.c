@@ -49,7 +49,7 @@ typedef struct {
 } NRF_UART_REG;
 
 void uart_init(void){
-  UART->STARTRX = 1;
+  UART->ENABLE = 4;
   GPIO->PIN_CNF[24] = 1; // set pin to output
   GPIO->PIN_CNF[25] = 0; // set pin to input
 
@@ -57,8 +57,8 @@ void uart_init(void){
   UART->PSELRXD = 25;
   UART->PSELRTS = 0xffffffff;
   UART->PSELCTS = 0xffffffff;
-  UART->BAUDRATE = 0x00275000;
-  UART->ENABLE = 4;
+  UART->BAUDRATE = 0x00275000; //9600 baud rate
+  UART->STARTRX = 1;
 }
 
 void uart_send(char letter){
